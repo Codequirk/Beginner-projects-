@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url('https://img.freepik.com/premium-photo/assorted-various-indian-food-dark-rustic-background-traditional-indian-dishes-chicken-tikka_1161461-4403.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex justify-center items-start min-h-screen py-10">
+        <div id="billingPage" class="bg-white p-6 rounded shadow-md w-full max-w-md overflow-y-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Billing</h1>
+
+            <!-- Cart Items -->
+            <div id="cartItems">
+                <!-- Dynamic cart items will be injected here -->
+            </div>
+
+            <!-- Total Price -->
+            <div id="totalPrice" class="mt-4 font-bold">
+                Total: Rs 0
+            </div>
+
+            <!-- Proceed to Payment Button -->
+            <button onclick="proceedToPayment()" class="mt-6 w-full bg-green-500 text-white py-2 rounded">PAY</button>
+        </div>
+        <!-- Order Confirmation Message -->
+        <div id="orderConfirmation" class="hidden bg-white p-6 rounded shadow-md w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold">Order Completed</h1>
+            <p class="mt-4 text-lg">Thank you for your order! Your food is on its way.</p>
+        </div>
+    </div>
+
+    <script>
+        // Dishes data from different regions
+        const allDishes = {
+            'North India': [
+                { name: "Rogan Josh", description: "An aromatic lamb dish.", price: 110 },
+                { name: "Amritsari Kulcha", description: "Stuffed bread from Amritsar.", price: 150 },
+                { name: "Kullu Trout Fish", description: "A must-try dish for fish lovers.", price: 150 },
+                { name: "Balushahi", description: "A deep-fried pastry with a flaky texture.", price: 150 }
+            ],
+            'East India': [
+                { name: "Litti Chokha", description: "Wholewheat flour dough stuffed with spiced sattu.", price: 250 },
+                { name: "Machcher Johl", description: "Traditional spicy fish curry from East India.", price: 450 },
+                { name: "Rasgulla", description: "Syrupy dessert popular in the eastern part of South Asia.", price: 30 },
+                { name: "Thukpa", description: "Tibetan noodle soup, widely enjoyed in Eastern India.", price: 300 }
+            ],
+            'South India': [
+                { name: "Masala Dosa", description: "A crispy South Indian rice-lentil crepe filled with spiced potato and served with chutney and sambar.", price: 120 },
+                { name: "Khara Bath", description: "A savory South Indian semolina dish cooked with vegetables, spices, and ghee, often served for breakfast.", price: 70 },
+                { name: "Malabar Parota", description: "A flaky, layered flatbread from Kerala, made with refined flour and cooked to golden perfection.", price: 130 },
+                { name: "Puliogare", description: "A tangy South Indian rice dish flavored with tamarind, spices, and roasted peanuts.", price: 90 }
+            ],
+            'West India': [
+                { name: "Dhokla", description: "A steamed Gujarati snack made from fermented chickpea flour, spiced and garnished with mustard seeds.", price: 90 },
+                { name: "Dal Bhatti Churma", description: "A Rajasthani dish combining spicy lentil curry (dal), baked wheat balls (baati), and sweet crumbled wheat (churma), enriched with ghee.", price: 130 },
+                { name: "Ghevar", description: "A traditional Rajasthani sweet, made from flour, soaked in sugar syrup, and often topped with rabri or nuts.", price: 155 },
+                { name: "Pav Bhaji", description: "A popular Mumbai street food featuring spicy mashed vegetables served with buttered bread rolls.", price: 130 }
+            ]
+        };
+
+        // Cart storage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Render Cart Items
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const totalPrice = document.getElementById('totalPrice');
+            let total = 0;
+            cartItems.innerHTML = '';
+
+            // Loop through cart items and display them
+            for (let dishName in cart) {
+                if (cart[dishName] > 0) {
+                    // Find the dish data based on name
+                    let dish = findDishByName(dishName);
+                    if (dish) {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.classList.add('mb-4', 'border', 'p-4', 'rounded', 'bg-gray-100', 'flex', 'items-center', 'justify-between');
+                        itemDiv.innerHTML = `
+                            <div class="flex items-center">
+                                <div>
+                                    <h2 class="text-lg font-bold">${dish.name}</h2>
+                                    <p class="italic">${dish.description}</p>
+                                    <p class="font-bold">Price: Rs ${dish.price}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="px-4">${cart[dishName]}</span>
+                            </div>
+                        `;
+                        cartItems.appendChild(itemDiv);
+                        total += dish.price * cart[dishName];
+                    }
+                }
+            }
+            totalPrice.innerHTML =` Total: Rs ${total}`;
+        }
+
+        // Find the dish by its name
+        function findDishByName(dishName) {
+            for (let region in allDishes) {
+                const dish = allDishes[region].find(d => d.name === dishName);
+                if (dish) return dish;
+            }
+            return null;
+        }
+
+        // Proceed to payment function (now shows order completion)
+        function proceedToPayment() {
+            // Hide the billing page and show order confirmation
+            document.getElementById('billingPage').classList.add('hidden');
+            document.getElementById('orderConfirmation').classList.remove('hidden');
+        }
+
+        // Initial render
+        renderCart();
+    </script>
+</body>
+</html>

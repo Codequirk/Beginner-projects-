@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>North India Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url('https://img.freepik.com/premium-photo/assorted-various-indian-food-dark-rustic-background-traditional-indian-dishes-chicken-tikka_1161461-4403.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-white p-6 rounded shadow-md w-full max-w-md h-full overflow-y-auto">
+            <h1 class="text-3xl font-bold mb-6">North India Dishes</h1>
+
+            <!-- Dish List -->
+            <div id="dishList">
+                <!-- Dynamic dish items will be injected here -->
+            </div>
+
+            <!-- Go to Billing Button -->
+            <button onclick="goToBilling()" class="mt-6 w-full bg-green-500 text-white py-2 rounded">Go to Billing</button>
+        </div>
+    </div>
+
+    <script>
+        // Dishes data
+        const dishes = [
+            { name: "Rogan Josh", description: "An aromatic lamb dish.", price: 110, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCkkDY6WI7taXAu9n4-YYpEv4WrUc8q9y9vA&s" },
+            { name: "Amritsari Kulcha", description: "Stuffed bread from Amritsar.", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJix7h8ufG67rSCkecGuCZRTGymsXUJPfVWw&s" },
+            { name: "Kullu Trout Fish", description: "A must-try dish for fish lovers.", price: 150, image: "https://assets.traveltriangle.com/blog/wp-content/uploads/2020/09/trout-fish.jpg" },
+            { name: "Balushahi", description: "A deep-fried pastry with a flaky texture.", price: 150, image: "https://www.vegrecipesofindia.com/wp-content/uploads/2018/06/balushahi-recipe-500x375.jpg" },
+        ];
+
+        // Cart storage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Initialize cart quantities
+        dishes.forEach(dish => {
+            if (!cart[dish.name]) {
+                cart[dish.name] = 0;
+            }
+        });
+
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Increase quantity
+        function increaseQuantity(dishName) {
+            cart[dishName]++;
+            saveCart();
+            renderDishes();
+        }
+
+        // Decrease quantity
+        function decreaseQuantity(dishName) {
+            if (cart[dishName] > 0) {
+                cart[dishName]--;
+                saveCart();
+                renderDishes();
+            }
+        }
+
+        // Render dishes
+        function renderDishes() {
+            const dishList = document.getElementById('dishList');
+            dishList.innerHTML = ''; // Clear previous content
+
+            dishes.forEach(dish => {
+                const dishItem = document.createElement('div');
+                dishItem.classList.add('mb-4', 'border', 'p-4', 'rounded', 'bg-gray-100', 'flex', 'items-center', 'justify-between');
+                dishItem.innerHTML = `
+                    <div class="flex items-center">
+                        <img src="${dish.image}" alt="${dish.name}" class="w-16 h-16 object-cover rounded-full mr-4">
+                        <div>
+                            <h2 class="text-lg font-bold">${dish.name}</h2>
+                            <p class="italic">${dish.description}</p>
+                            <p class="font-bold">Price: Rs ${dish.price}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button onclick="decreaseQuantity('${dish.name}')" class="bg-red-500 text-white px-2 py-1 rounded-l">-</button>
+                        <span class="px-4">${cart[dish.name]}</span>
+                        <button onclick="increaseQuantity('${dish.name}')" class="bg-green-500 text-white px-2 py-1 rounded-r">+</button>
+                    </div>
+                `;
+                dishList.appendChild(dishItem);
+            });
+        }
+
+        // Go to billing page
+        function goToBilling() {
+            window.location.href = "billing.html";
+        }
+
+        // Initial render
+        renderDishes();
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center h-screen">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-md text-center">
+        <h1 class="text-3xl font-bold mb-4">Order Placed!</h1>
+        <p class="text-lg">Thank you for ordering with us. Your food will arrive shortly!</p>
+        <button onclick="goToMenu()" class="mt-6 bg-blue-500 text-white py-2 px-4 rounded">Back to Menu</button>
+    </div>
+
+    <script>
+        function goToMenu() {
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
