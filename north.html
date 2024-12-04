@@ -17,6 +17,13 @@
         <div class="bg-white p-6 rounded shadow-md w-full max-w-md h-full overflow-y-auto">
             <h1 class="text-3xl font-bold mb-6">North India Dishes</h1>
 
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <input type="text" id="searchBar" placeholder="Search restaurants/items" 
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    oninput="filterDishes()">
+            </div>
+
             <!-- Dish List -->
             <div id="dishList">
                 <!-- Dynamic dish items will be injected here -->
@@ -67,12 +74,22 @@
             }
         }
 
+        // Filter dishes based on search input
+        function filterDishes() {
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            const filteredDishes = dishes.filter(dish => 
+                dish.name.toLowerCase().includes(searchQuery) || 
+                dish.description.toLowerCase().includes(searchQuery)
+            );
+            renderDishes(filteredDishes);
+        }
+
         // Render dishes
-        function renderDishes() {
+        function renderDishes(filteredDishes = dishes) {
             const dishList = document.getElementById('dishList');
             dishList.innerHTML = ''; // Clear previous content
 
-            dishes.forEach(dish => {
+            filteredDishes.forEach(dish => {
                 const dishItem = document.createElement('div');
                 dishItem.classList.add('mb-4', 'border', 'p-4', 'rounded', 'bg-gray-100', 'flex', 'items-center', 'justify-between');
                 dishItem.innerHTML = `
