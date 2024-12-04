@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>West India Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url('https://th.bing.com/th/id/OIP.HZiVmIV6ylLqgwzNIzpgEgHaEv?rs=1&pid=ImgDetMain') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex justify-center items-start min-h-screen py-10">
+        <div class="bg-white p-6 rounded shadow-md w-full max-w-md overflow-y-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">West India Dishes</h1>
+
+            <!-- Dish List -->
+            <div id="dishList">
+                <!-- Dynamic dish items will be injected here -->
+            </div>
+
+            <!-- Go to Billing Button -->
+            <button onclick="goToBilling()" class="mt-6 w-full bg-green-500 text-white py-2 rounded">Go to Billing</button>
+        </div>
+    </div>
+
+    <script>
+        // Dishes data
+        const dishes = [
+            { name: "Dhokla", description: "A steamed Gujarati snack made from fermented chickpea flour, spiced and garnished with mustard seeds.", price: 90, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSSaFhdUSI9SPCk4cfEBoUX_jHwRLD1jhzkg&s" },
+            { name: "Dal Bhatti Churma", description: "A Rajasthani dish combining spicy lentil curry (dal), baked wheat balls (baati), and sweet crumbled wheat (churma), enriched with ghee.", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZtmFf2HkHtY6wdhjuWxCCO0rR-SJTHbqtEQ&s" },
+            { name: "Ghevar", description: "A traditional Rajasthani sweet, made from flour, soaked in sugar syrup, and often topped with rabri or nuts.", price: 155, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKcMLfIeBDHingkLH1WNrM2vRW0H6S1dca4Dn7qWQuPI95vFlxCXVkLAreWYcRxtUWR1U&usqp=CAU" },
+            { name: "Pav Bhaji", description: "A popular Mumbai street food featuring spicy mashed vegetable curry (bhaji) served with buttered bread rolls (pav).", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9Z9pXLH43Amn_ySM7ufr43GxmSVLIcIPE0A&s" },
+        ];
+
+        // Cart storage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Initialize cart quantities
+        dishes.forEach(dish => {
+            if (!cart[dish.name]) {
+                cart[dish.name] = 0;
+            }
+        });
+
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Increase quantity
+        function increaseQuantity(dishName) {
+            cart[dishName]++;
+            saveCart();
+            renderDishes();
+        }
+
+        // Decrease quantity
+        function decreaseQuantity(dishName) {
+            if (cart[dishName] > 0) {
+                cart[dishName]--;
+                saveCart();
+                renderDishes();
+            }
+        }
+
+        // Render dishes
+        function renderDishes() {
+            const dishList = document.getElementById('dishList');
+            dishList.innerHTML = ''; // Clear previous content
+
+            dishes.forEach(dish => {
+                const dishItem = document.createElement('div');
+                dishItem.classList.add('mb-4', 'border', 'p-4', 'rounded', 'bg-gray-100', 'flex', 'items-center', 'justify-between');
+                dishItem.innerHTML = `
+                    <div class="flex items-center">
+                        <img src="${dish.image}" alt="${dish.name}" class="w-16 h-16 object-cover rounded-full mr-4">
+                        <div>
+                            <h2 class="text-lg font-bold">${dish.name}</h2>
+                            <p class="italic">${dish.description}</p>
+                            <p class="font-bold">Price: Rs ${dish.price}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button onclick="decreaseQuantity('${dish.name}')" class="bg-red-500 text-white px-2 py-1 rounded-l">-</button>
+                        <span class="px-4">${cart[dish.name]}</span>
+                        <button onclick="increaseQuantity('${dish.name}')" class="bg-green-500 text-white px-2 py-1 rounded-r">+</button>
+                    </div>
+                `;
+                dishList.appendChild(dishItem);
+            });
+        }
+
+        // Go to billing page
+        function goToBilling() {
+            window.location.href = "billing.html";
+        }
+
+        // Initial render
+        renderDishes();
+    </script>
+</body>
+</html>
