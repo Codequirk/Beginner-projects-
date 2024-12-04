@@ -13,9 +13,16 @@
     </style>
 </head>
 <body class="bg-orange-100">
-    <div class="flex justify-center items-start min-h-screen py-10">
+    <div class="flex justify-center items-center min-h-screen py-10">
         <div class="bg-white p-6 rounded shadow-md w-full max-w-md overflow-y-auto">
             <h1 class="text-3xl font-bold mb-6 text-center">East India Dishes</h1>
+
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <input type="text" id="searchBar" placeholder="Search dishes/items" 
+                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    oninput="filterDishes()">
+            </div>
 
             <!-- Dish List -->
             <div id="dishList">
@@ -67,21 +74,31 @@
             }
         }
 
+        // Filter dishes based on search input
+        function filterDishes() {
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            const filteredDishes = dishes.filter(dish => 
+                dish.name.toLowerCase().includes(searchQuery) || 
+                dish.description.toLowerCase().includes(searchQuery)
+            );
+            renderDishes(filteredDishes);
+        }
+
         // Render dishes
-        function renderDishes() {
+        function renderDishes(filteredDishes = dishes) {
             const dishList = document.getElementById('dishList');
             dishList.innerHTML = ''; // Clear previous content
 
-            dishes.forEach(dish => {
+            filteredDishes.forEach(dish => {
                 const dishItem = document.createElement('div');
                 dishItem.classList.add('mb-4', 'border', 'p-4', 'rounded', 'bg-gray-100', 'flex', 'items-center', 'justify-between');
                 dishItem.innerHTML = `
                     <div class="flex items-center">
                         <img src="${dish.image}" alt="${dish.name}" class="w-16 h-16 object-cover rounded-full mr-4">
                         <div>
-                            <h2 class="text-lg font-semibold">${dish.name}</h2>
-                            <p>${dish.description}</p>
-                            <p>Price: Rs${dish.price}</p>
+                            <h2 class="text-lg font-bold">${dish.name}</h2>
+                            <p class="italic">${dish.description}</p>
+                            <p class="font-bold">Price: Rs ${dish.price}</p>
                         </div>
                     </div>
                     <div class="flex items-center">
@@ -104,4 +121,3 @@
     </script>
 </body>
 </html>
-
